@@ -38,7 +38,7 @@ Projeto desenvolvido para a D&Bu Tintas. As credenciais de acesso são entregues
 | **Domínio** | Endereço utilizado para acessar o site | ✅ Enviado |
 
 **Canal de envio:** grupo do WhatsApp com o cliente.  
-**Data de envio:** 11/11/2026
+**Data de envio:** 12/11/2026
 
 > ⚠️ Nunca registre senhas, tokens ou outras credenciais diretamente neste repositório. Recomenda-se que o cliente altere as senhas após receber os acessos e habilite autenticação em duas etapas (2FA), quando disponível.
 
