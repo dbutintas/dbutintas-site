@@ -6,9 +6,12 @@ import { CONTACT } from '../../data/contact';
 import { buildWhatsAppLink } from '../../services/whatsapp';
 import { WhatsAppIcon } from '../ui/icons/WhatsAppIcon';
 import logo from '../../assets/images/logo.jpeg';
+import { useState } from 'react';
+import { PrivacyPolicyModal } from '../ui/PrivacyPolicyModal';
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const [policyOpen, setPolicyOpen] = useState(false);
 
   return (
     <footer className="relative overflow-hidden bg-ink-900 text-white">
@@ -100,15 +103,17 @@ export function Footer() {
       <div className="border-t border-white/10">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-xs text-white/50 sm:flex-row">
           <p>© {year} D&amp;Bu Tintas — Sua loja de tintas. Todos os direitos reservados.</p>
-          <a
-            href="#inicio"
-            className="flex items-center gap-1.5 transition-colors hover:text-white"
-          >
-            Voltar ao topo
-            <ArrowUp size={14} />
-          </a>
+          <div className="flex items-center gap-5">
+            <button type="button" onClick={() => setPolicyOpen(true)} className="transition-colors hover:text-white">
+              Política de Privacidade
+            </button>
+            <a href="#inicio" className="flex items-center gap-1.5 transition-colors hover:text-white">
+              Voltar ao topo <ArrowUp size={14} />
+            </a>
+          </div>
         </Container>
       </div>
+      <PrivacyPolicyModal open={policyOpen} onClose={() => setPolicyOpen(false)} />
     </footer>
   );
 }

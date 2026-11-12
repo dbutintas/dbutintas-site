@@ -7,6 +7,7 @@ import { RevealOnScroll } from '../ui/RevealOnScroll';
 import { Button } from '../ui/Button';
 import { CONTACT } from '../../data/contact';
 import { buildContactWhatsAppLink } from '../../services/contactForm';
+import { PrivacyPolicyModal } from '../ui/PrivacyPolicyModal';
 
 const contactCards = [
   {
@@ -31,8 +32,10 @@ const contactCards = [
 
 export function ContactSection() {
   const [values, setValues] = useState({ name: '', phone: '', message: '' });
+  const [consent, setConsent] = useState(false);
+  const [policyOpen, setPolicyOpen] = useState(false);
 
-  const isValid = values.name.trim().length > 1 && values.message.trim().length > 3;
+  const isValid = values.name.trim().length > 1 && values.message.trim().length > 3 && consent;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -84,8 +87,11 @@ export function ContactSection() {
                 <input
                   type="text"
                   required
+                  maxLength={50}
+                  pattern="[\p{L}]+([ '\u2019-][\p{L}]+)*"
+                  title="Use apenas letras, espaços, hífen ou apóstrofo."
                   value={values.name}
-                  onChange={(e) => setValues((v) => ({ ...v, name: e.target.value }))}
+                  onChange={(e) => setValues((v) => ({ ...v, name: e.target.value.replace(/[^\p{L} '\u2019-]/gu, '').slice(0, 50) }))}
                   placeholder="Seu nome"
                   className="w-full rounded-xl border border-ink-900/10 bg-paper-100 px-4 py-3 text-ink-900 outline-none transition-colors focus:border-ember-400 focus:bg-white"
                 />
@@ -94,9 +100,11 @@ export function ContactSection() {
                 <span className="mb-1.5 block font-medium text-ink-800">Telefone</span>
                 <input
                   type="tel"
+                  inputMode="numeric"
+                  maxLength={11}
                   value={values.phone}
-                  onChange={(e) => setValues((v) => ({ ...v, phone: e.target.value }))}
-                  placeholder="(11) 90000-0000"
+                  onChange={(e) => setValues((v) => ({ ...v, phone: e.target.value.replace(/\D/g, '').slice(0, 11) }))}
+                  placeholder="11900000000"
                   className="w-full rounded-xl border border-ink-900/10 bg-paper-100 px-4 py-3 text-ink-900 outline-none transition-colors focus:border-ember-400 focus:bg-white"
                 />
               </label>
@@ -107,11 +115,21 @@ export function ContactSection() {
               <textarea
                 required
                 rows={5}
+                maxLength={150}
                 value={values.message}
                 onChange={(e) => setValues((v) => ({ ...v, message: e.target.value }))}
                 placeholder="Conte o que você precisa: produto, cor, prazo..."
                 className="w-full resize-none rounded-xl border border-ink-900/10 bg-paper-100 px-4 py-3 text-ink-900 outline-none transition-colors focus:border-ember-400 focus:bg-white"
               />
+              <span className="mt-1 block text-right text-xs text-ink-500">{values.message.length}/150</span>
+            </label>
+
+            <label className="mt-5 flex items-start gap-3 text-sm leading-relaxed text-ink-600">
+              <input type="checkbox" required checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-1 h-4 w-4 shrink-0 accent-ember-600" />
+              <span>
+                Autorizo o uso dos dados informados para que a D&amp;Bu Tintas entre em contato comigo. Li e concordo com a{' '}
+                <button type="button" onClick={() => setPolicyOpen(true)} className="font-medium text-ember-600 underline underline-offset-2">Política de Privacidade</button>.
+              </span>
             </label>
 
             <Button preset = "whatsapp" type="submit" disabled={!isValid} className="mt-6 w-full justify-center sm:w-auto">
@@ -123,6 +141,7 @@ export function ContactSection() {
           </form>
         </RevealOnScroll>
       </Container>
+      <PrivacyPolicyModal open={policyOpen} onClose={() => setPolicyOpen(false)} />
     </section>
   );
 }
